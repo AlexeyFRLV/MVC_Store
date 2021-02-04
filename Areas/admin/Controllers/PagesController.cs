@@ -92,5 +92,96 @@ namespace MVC_Store.Areas.admin.Controllers
             //Переадресовываем пользователя на метод INDEX
             return RedirectToAction("Index");
         }
+
+        // GET: admin/Pages/EditPage/id
+        [HttpGet]
+        public ActionResult EditPage(int id)
+        {
+            //Объявляем модель PageVM
+            PageVM model;
+
+            using (Db db = new Db())
+            {
+                //Получаем страницу (данные страницы)
+                PagesDTO dto = db.Pages.Find(id);
+
+                //Проверяем доступна ли страница
+                if (dto == null)
+                {
+                    return Content("The page does not exist.");
+                }
+
+                //Инициализируем модель данными из бд
+                model = new PageVM(dto);
+            }
+
+            //Возвращаем модель в представление
+            return View(model);
+        }
+
+        // POST: admin/Pages/EditPage
+        [HttpPost]
+        public ActionResult EditPage(PageVM model)
+        {
+            //Проверить модель на валидность
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (Db db = new Db())
+            {
+                //Получаем Id страницы
+                int id = model.Id;
+
+                //Объявим переменную краткого заголовка (slug)
+                string slug = "home";
+
+                //Получаем страницу по "Id"
+                PagesDTO dto = db.Pages.Find(id);
+
+                //Присваиваем название из полученной модели в DTO
+                dto.Title = model.Title;
+
+                //Проверяем, есть ли краткое описание, если нет - присваиваем его 
+                if (model.Slug != "home")
+                {
+                    if (string.IsNullOrWhiteSpace(model.Slug))
+                    {
+                        slug = model.Title.Replace(" ", "-").ToLower();
+                    }
+                    else
+                    {
+                        slug = model.Slug.Replace(" ", "-").ToLower();
+                    }
+                }
+
+                //Проверяем заголовок (Title) и краткое описание (Slug) на уникальность
+                if (db.Pages.Where(x=> x.Id != id).Any(x => x.Title == model.Title) )
+                {
+                    ModelState.AddModelError("", "Thit title already exist!");
+                    return View(model);
+                }
+                else if(db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
+                {
+                    ModelState.AddModelError("", "Thit slug already exist!");
+                    return View(model);
+                }
+
+                //Записываем оставшиеся данные в класс DTO
+                dto.Slug = slug;
+                dto.Body = model.Body;
+                dto.HasSidebar = model.HasSidebar;
+
+                //Сохранить изменения в бд
+                db.SaveChanges();
+            }
+
+            //Устанавливаем сообщение в TempData
+            TempData["SM"] = "You have edited the page.";
+
+            //Переадресация пользователя на исходную страницу
+            return RedirectToAction("EditPage");
+        }
     }
 }
