@@ -10,6 +10,7 @@ namespace MVC_Store.Areas.admin.Controllers
 {
     public class PagesController : Controller
     {
+        //Создаем метод отображения главной страницы
         // GET: admin/Pages
         public ActionResult Index()
         {
@@ -26,6 +27,7 @@ namespace MVC_Store.Areas.admin.Controllers
             return View(pageList);
         }
 
+        //Добавляем метод создания страниц
         // GET: admin/Pages/AddPage
         [HttpGet]
         public ActionResult AddPage()
@@ -33,6 +35,7 @@ namespace MVC_Store.Areas.admin.Controllers
             return View();
         }
 
+        //Добавляем метод создания страниц
         // POST: admin/Pages/AddPage
         [HttpPost]
         public ActionResult AddPage(PageVM model)
@@ -93,6 +96,7 @@ namespace MVC_Store.Areas.admin.Controllers
             return RedirectToAction("Index");
         }
 
+        //Добавляем метод редактирования страниц
         // GET: admin/Pages/EditPage/id
         [HttpGet]
         public ActionResult EditPage(int id)
@@ -119,6 +123,7 @@ namespace MVC_Store.Areas.admin.Controllers
             return View(model);
         }
 
+        //Добавляем метод редактирования страниц
         // POST: admin/Pages/EditPage
         [HttpPost]
         public ActionResult EditPage(PageVM model)
@@ -184,6 +189,7 @@ namespace MVC_Store.Areas.admin.Controllers
             return RedirectToAction("EditPage");
         }
 
+        //Создаем метод страницы деталей
         // GET: admin/Pages/PageDetails/id
         [HttpGet]
         public ActionResult PageDetails(int id)
@@ -207,6 +213,30 @@ namespace MVC_Store.Areas.admin.Controllers
             }
             //Возвращаем модель в представление
             return View(model);
+        }
+
+        //Создаём метод удаления страниц
+        // GET: admin/Pages/DeletePage/id
+        [HttpGet]
+        public ActionResult DeletePage(int id)
+        {
+            using (Db db = new Db())
+            {
+                //Получаем страницу
+                PagesDTO dto = db.Pages.Find(id);
+
+                //Удаляем страницу
+                db.Pages.Remove(dto);
+
+                //Сохраняем изменения в бд
+                db.SaveChanges();
+            }
+
+            //Добавить сообщение об успешном удалении
+            TempData["SM"] = "The page deleted successfully!";
+
+            //Переадресовываем пользователя на страницу INDEX(начальную)
+            return RedirectToAction("Index");
         }
     }
 }
