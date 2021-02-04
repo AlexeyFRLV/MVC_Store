@@ -238,5 +238,30 @@ namespace MVC_Store.Areas.admin.Controllers
             //Переадресовываем пользователя на страницу INDEX(начальную)
             return RedirectToAction("Index");
         }
+
+        //Создаем метод сортировки
+        // GET: admin/Pages/ReorderPages
+        [HttpPost]
+        public void ReorderPages(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                //Реализуем начальный счетчик
+                int count = 1;
+
+                //Инициализируем можель данных
+                PagesDTO dto;
+                //Устанавливаем сортировку для каждой страницы
+                foreach (var pageId in id)
+                {
+                    dto = db.Pages.Find(pageId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+                    
+                    count++;
+                }
+            }
+        }
     }
 }
