@@ -240,7 +240,7 @@ namespace MVC_Store.Areas.admin.Controllers
         }
 
         //Создаем метод сортировки
-        // GET: admin/Pages/ReorderPages
+        // Post: admin/Pages/ReorderPages
         [HttpPost]
         public void ReorderPages(int[] id)
         {
@@ -262,6 +262,49 @@ namespace MVC_Store.Areas.admin.Controllers
                     count++;
                 }
             }
+        }
+
+        // GET: admin/Pages/EditSidebar
+        [HttpGet]
+        public ActionResult EditSidebar()
+        {
+            //Объявляем модель
+            SidebarVM model;
+
+            using (Db db = new Db())
+            {
+                //Получаем данные из DTO
+                SidebarDTO dto = db.Sidebars.Find(1);                   //говнакодинг, потом исправлю!!! (1 - это id)
+
+                //Заполняем модель данными
+                model = new SidebarVM(dto);
+            }
+
+            //Вернуть представление с моделью
+            return View(model);
+        }
+
+        // Post: admin/Pages/EditSidebar
+        [HttpPost]
+        public ActionResult EditSidebar(SidebarVM model)
+        {
+            using (Db db = new Db())
+            {
+                //Получить данные из бд(DTO)
+                SidebarDTO dto = db.Sidebars.Find(1);                   //Говнакодинг!!!! Исправлю!
+
+                //Присвоить данные в тело (в свойство Body)
+                dto.Body = model.Body;
+
+                //Сохранить изменения
+                db.SaveChanges();
+            }
+
+            //Выводим сообщение с помощью TempData
+            TempData["SM"] = "You have edited the sidebar!";
+
+            //Переадресация пользователя
+            return RedirectToAction("EditSidebar");
         }
     }
 }
