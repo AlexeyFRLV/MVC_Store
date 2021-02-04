@@ -178,6 +178,8 @@
     <Content Include="Areas\admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\admin\Views\Pages\Index.cshtml" />
+    <Content Include="Areas\admin\Views\Pages\AddPage.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -284,7 +286,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\admin\Data\" />
-    <Folder Include="Areas\admin\Views\Pages\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
