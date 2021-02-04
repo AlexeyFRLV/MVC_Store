@@ -76,3 +76,11 @@
 <div>
     @Html.ActionLink("Back to Pages", "Index")
 </div>
+
+<!--Подменяем наше тело (Body) текстовым редактором CKEditor-->
+@section Scripts
+{
+    <script>
+       CKEDITOR.replace("Body")
+    </script>
+}
