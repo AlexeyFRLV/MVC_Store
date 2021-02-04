@@ -10,5 +10,6 @@ namespace MVC_Store.Models.Data
     {
         public DbSet<PagesDTO> Pages { get; set; }      //связь между сущностью и базой данных
 
+        public DbSet<SidebarDTO> Sidebars { get; set; }
     }
 }
